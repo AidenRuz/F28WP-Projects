@@ -26,8 +26,65 @@ var dictionary = [
     "serendipity", "tintinnabulation", "ubiquitous", "vex", "whimsical", "xenon", "yonder", "zymurgy"
 ]
 
+function update(text) {
+    review.innerText = text;
+}
 
+function randomBetween(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
+function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function sentence() {
+    let text = "";
+    let periodCounter = 0;
+    let insertAt = randomBetween(6,10);
+    let newSentence = true;
+    for (let i = 0; i < 45; i++) {
+        // Insert period at random intervals
+        if (periodCounter === insertAt) {
+            // Prevent a last sentence from being too short
+            if (i >= 43) {
+                break;
+            } else {
+                text += ".";
+                periodCounter = 0;
+                insertAt = randomBetween(6,10);
+                newSentence = true;
+            }
+          
+        };
+
+        // Store a word from the dictionary at a random location
+        let index = Math.floor(Math.random() * dictionary.length);
+
+        // Capitalize at each new sentence
+        if (newSentence === true) {
+            text += " " + capitalize(dictionary[index]);
+        } else {
+            text += " " + dictionary[index];
+        }
+
+        // newSentence remains false if no period has been inserted
+        newSentence = false;
+        // Increment if no period is inserted
+        periodCounter++;
+    };
+    // If the last character isn't a period, insert one.
+    if (text.slice(-1) != ".") {
+        text += "."
+    }
+
+    return text;
+}
+
+// Insert random review automatically
+window.onload() = function() {
+    update(sentence());
+}
 
 previous.addEventListener('click', function() {
     
@@ -38,21 +95,5 @@ next.addEventListener('click', function() {
 });
 
 random.addEventListener('click', function() {
-    let text = "";
-    let periodCounter = 0;
-    let max = Math.floor(Math.random() * 10);
-    for (let i = 0; i < 65; i++) {
-        if (periodCounter === max) {
-            text += ".";
-            periodCounter = 0;
-            max = Math.floor(Math.random() * 10);
-        };
-        let selection = Math.floor(Math.random() * dictionary.length);
-        text += " " + dictionary[selection];
-        periodCounter++;
-    };
-    if (text.slice(-1) != ".") {
-        text += "."
-    }
-    review.innerText = text;
+    update(sentence());
 });
